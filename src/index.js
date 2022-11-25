@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import 'modern-normalize/modern-normalize.css';
-import { App } from 'components/App';
-import './index.css';
 import { ThemeProvider } from 'styled-components';
-import { theme } from 'components/Theme/theme';
+import 'modern-normalize/modern-normalize.css';
+import './index.css';
+import './styles/styles.css';
+import { App } from 'components/App';
+import { theme } from 'components/Theme';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
