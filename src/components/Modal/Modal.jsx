@@ -1,16 +1,12 @@
 import { PureComponent } from 'react';
 import { createPortal } from 'react-dom';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends PureComponent {
   componentDidMount() {
-    console.log('modal mount');
     window.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  componentDidUpdate() {
-    console.log('modal update');
   }
 
   componentWillUnmount() {
@@ -30,10 +26,11 @@ export class Modal extends PureComponent {
   };
 
   render() {
-    const { url, alt } = this.props;
+    const { url, alt, children } = this.props;
     return createPortal(
       <div className="Overlay" onClick={this.handleOverlayClick}>
         <div className="Modal">
+          {children}
           <img src={url} alt={alt} />
         </div>
       </div>,

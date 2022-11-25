@@ -19,7 +19,8 @@ export const SearchBar = ({ onSubmit }) => {
     // setTimeout(() => {
     //   onSubmit(searchQuery.trim());
     //   actions.setSubmitting(false);
-    // }, 1000);
+    // }, 2000);
+
     onSubmit(searchQuery.trim());
     actions.setSubmitting(false);
   };
