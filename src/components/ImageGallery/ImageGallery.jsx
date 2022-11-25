@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import * as API from 'API_Pixabay/API_Pixabay';
 import { Modal } from 'components/Modal';
 import { Loader } from 'components/Loader';
+import { Button } from 'components/Button';
 
 export class ImageGallery extends PureComponent {
   state = {
@@ -102,14 +103,14 @@ export class ImageGallery extends PureComponent {
             />
           ))}
         </ul>
-        <button
+        <Button
           type="button"
           className="Button"
           disabled={this.state.pictures.length < 12}
           onClick={this.onNext}
         >
-          <span>Next</span>
-        </button>
+          Next
+        </Button>
       </Box>
     );
 
