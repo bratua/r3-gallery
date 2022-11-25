@@ -1,15 +1,27 @@
 import { Field, Form, Formik } from 'formik';
+import { toast } from 'react-toastify';
+
 import { ReactComponent as SearchIcon } from '../icons/search.svg';
 
 export const SearchBar = ({ onSubmit }) => {
   const initialValues = { searchQuery: '' };
+  let placeHolder = 'Search images and photos';
 
   const handleSubmit = ({ searchQuery }, actions) => {
-    setTimeout(() => {
-      onSubmit(searchQuery);
+    if (searchQuery.trim() === '') {
+      placeHolder = 'Enter your search query!';
+      toast.warn('Enter your search query!', {
+        position: 'top-right',
+      });
       actions.setSubmitting(false);
-    }, 3000);
-    // onSubmit(searchQuery);
+      return;
+    }
+    // setTimeout(() => {
+    //   onSubmit(searchQuery.trim());
+    //   actions.setSubmitting(false);
+    // }, 1000);
+    onSubmit(searchQuery.trim());
+    actions.setSubmitting(false);
   };
 
   return (
@@ -31,7 +43,7 @@ export const SearchBar = ({ onSubmit }) => {
               type="text"
               autoComplete="off"
               autoFocus
-              placeholder="Search images and photos"
+              placeholder={placeHolder}
             />
           </Form>
         </div>

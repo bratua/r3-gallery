@@ -1,5 +1,7 @@
 import Box from 'components/Box';
 import { PureComponent } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { SearchBar } from 'components/Searchbar';
 import { ImageGallery } from 'components/ImageGallery';
 import * as API from 'API_Pixabay/API_Pixabay';
@@ -85,6 +87,18 @@ export class App extends PureComponent {
             close={this.toggleModal}
           ></Modal>
         )}
+        <ToastContainer
+          position="top-right"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </Box>
     );
   }
