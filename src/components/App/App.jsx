@@ -8,8 +8,14 @@ import { ImageGallery } from 'components/ImageGallery';
 export class App extends PureComponent {
   state = { searchQuery: '' };
 
-  // componentDidMount() {
-  //   this.setState({ searchQuery: '' });
+  componentDidMount() {
+    this.setState({ searchQuery: '' });
+  }
+
+  // componentDidUpdate() {
+  //   if (this.state.searchQuery !== '') {
+  //     this.setState({ searchQuery: '' });
+  //   }
   // }
 
   onSearch = query => {

@@ -5,6 +5,7 @@ import * as API from 'API_Pixabay/API_Pixabay';
 import { Modal } from 'components/Modal';
 import { Loader } from 'components/Loader';
 import { Button } from 'components/Button';
+import { flex } from 'styled-system';
 
 export class ImageGallery extends PureComponent {
   state = {
@@ -14,28 +15,30 @@ export class ImageGallery extends PureComponent {
     showModal: false,
     pictureAlt: '',
     pictureLargeUrl: '',
+    scrollToId: '',
   };
-
-  componentDidMount() {
-    this.setState({
-      pictures: [],
-      page: 1,
-      progress: 'idle',
-      showModal: false,
-      pictureAlt: '',
-      pictureLargeUrl: '',
-    });
-  }
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.page !== prevState.page) {
-      this.getPictures();
+      await this.getPictures();
+      // const container = document.getElementById('imageGallery');
+
+      // console.log(container);
+      // this.scrollNextPage(container);
     }
     if (this.props.searchQuery !== prevProps.searchQuery) {
       this.setState({ pictures: [], page: 1 });
-      this.getPictures();
+      await this.getPictures();
     }
   }
+
+  scrollNextPage = () => {
+    const urlId = this.state.scrollToId;
+    // const targetImg = document.querySelector(`img[src="${urlId}"]`);
+    // container.scrollIntoView;
+    console.log('url', urlId);
+    // console.log('targetImg', targetImg);
+  };
 
   onNext = () => {
     this.setState(prev => ({
@@ -58,10 +61,15 @@ export class ImageGallery extends PureComponent {
         this.props.searchQuery,
         this.state.page
       );
+      console.log(pictures);
       this.setState(prevProps => ({
         pictures: [...prevProps.pictures, ...pictures],
         progress: 'loaded',
+        scrollToId: pictures[0].id,
       }));
+      console.log('first', pictures[0].id);
+      this.scrollNextPage();
+      //! Взять ИТ тут!!!
     }, 1000);
   };
 
@@ -79,6 +87,23 @@ export class ImageGallery extends PureComponent {
     const { pictures, pictureLargeUrl, pictureAlt, showModal, progress } =
       this.state;
 
+    if (progress === 'idle') {
+      return (
+        <Box
+          display="flex"
+          textAlign="centercd"
+          flexDirection="column"
+          height="900px"
+          alignItems="center"
+          justifyContent="center"
+          fontSize="100px"
+        >
+          <h3>Pixabay Search Pictures Machine</h3>
+          <p>by LSP</p>
+        </Box>
+      );
+    }
+
     return (
       <Box>
         {showModal && (
@@ -91,26 +116,28 @@ export class ImageGallery extends PureComponent {
 
         {progress === 'loading' && <Loader />}
 
-        <ul className="ImageGallery">
-          {pictures.map(pic => (
+        <ul className="ImageGallery" id="imageGallery">
+          {pictures.map(({ id, webformatURL, largeImageURL, tags }) => (
             <ImageGalleryItem
-              key={pic.id}
-              imgUrl={pic.webformatURL}
-              largeImageURL={pic.largeImageURL}
-              imgId={pic.id}
-              tags={pic.tags}
+              key={id}
+              imgUrl={webformatURL}
+              largeImageURL={largeImageURL}
+              imgId={id}
+              tags={tags}
               onPreview={this.onPreview}
             />
           ))}
         </ul>
-        <Button
-          type="button"
-          className="Button"
-          disabled={this.state.pictures.length < 12}
-          onClick={this.onNext}
-        >
-          Next
-        </Button>
+        {progress === 'loaded' && (
+          <Button
+            type="button"
+            className="Button"
+            disabled={this.state.pictures.length < 12}
+            onClick={this.onNext}
+          >
+            Next
+          </Button>
+        )}
       </Box>
     );
 
