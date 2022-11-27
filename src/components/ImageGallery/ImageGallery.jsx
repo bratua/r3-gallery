@@ -5,7 +5,6 @@ import * as API from 'API_Pixabay/API_Pixabay';
 import { Modal } from 'components/Modal';
 import { Loader } from 'components/Loader';
 import { Button } from 'components/Button';
-import { flex } from 'styled-system';
 
 export class ImageGallery extends PureComponent {
   state = {
@@ -15,16 +14,16 @@ export class ImageGallery extends PureComponent {
     showModal: false,
     pictureAlt: '',
     pictureLargeUrl: '',
-    scrollToId: '',
+    scrollToId: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.page !== prevState.page) {
-      await this.getPictures();
-      // const container = document.getElementById('imageGallery');
+      // await this.getPictures();
+      await this.scrollNextPage();
 
-      // console.log(container);
-      // this.scrollNextPage(container);
+      // const target = await this.state.pictures[12].id;
+      // const targetItem = document.getElementById(`${target}`);
     }
     if (this.props.searchQuery !== prevProps.searchQuery) {
       this.setState({ pictures: [], page: 1 });
@@ -32,12 +31,22 @@ export class ImageGallery extends PureComponent {
     }
   }
 
-  scrollNextPage = () => {
-    const urlId = this.state.scrollToId;
-    // const targetImg = document.querySelector(`img[src="${urlId}"]`);
-    // container.scrollIntoView;
-    console.log('url', urlId);
-    // console.log('targetImg', targetImg);
+  scrollNextPage = async () => {
+    await this.getPictures();
+    console.log('state id', this.state.scrollToId);
+    // const target = await ;
+    // const target = this.state.scrollToId;
+    // const targetItem = document.getElementById(`${}`);
+    // console.log('target', target);
+    // console.log('targetItem', targetItem);
+    // targetItem.scrollIntoView();
+    // setTimeout(() => {
+    //   const target = this.state.scrollToId;
+    //   const targetItem = document.getElementById(`${target}`);
+    //   console.log('target', target);
+    //   console.log('targetItem', targetItem);
+    //   targetItem.scrollIntoView();
+    // }, 0);
   };
 
   onNext = () => {
@@ -48,29 +57,25 @@ export class ImageGallery extends PureComponent {
 
   getPictures = async () => {
     this.setState({ progress: 'loading' });
-    // const pictures = await API.getQueryPicture(
-    //   this.props.searchQuery,
-    //   this.state.page
-    // );
-    // this.setState(prevProps => ({
-    //   pictures: [...prevProps.pictures, ...pictures],
-    // }));
+    const pictures = await API.getQueryPicture(
+      this.props.searchQuery,
+      this.state.page
+    );
+    console.log(pictures);
+    const prevId = this.state.scrollToId;
 
-    setTimeout(async () => {
-      const pictures = await API.getQueryPicture(
-        this.props.searchQuery,
-        this.state.page
-      );
-      console.log(pictures);
-      this.setState(prevProps => ({
-        pictures: [...prevProps.pictures, ...pictures],
-        progress: 'loaded',
-        scrollToId: pictures[0].id,
-      }));
-      console.log('first', pictures[0].id);
-      this.scrollNextPage();
-      //! Взять ИТ тут!!!
-    }, 1000);
+    this.setState(prevProps => ({
+      pictures: [...prevProps.pictures, ...pictures],
+      // progress: 'loaded',
+      scrollToId: pictures[0].id,
+    }));
+    console.log(prevId);
+    console.log(pictures[0].id);
+    console.log(prevId !== pictures[0].id);
+
+    if (prevId !== pictures[0].id) {
+      this.setState({ progress: 'loaded' });
+    }
   };
 
   onPreview = (url, alt) => {
@@ -106,6 +111,19 @@ export class ImageGallery extends PureComponent {
 
     return (
       <Box>
+        {progress === 'loaded' && (
+          <Button
+            type="button"
+            className="Button"
+            disabled={
+              this.state.pictures.length < 12 ||
+              this.state.pictures.length % 12 !== 0
+            }
+            onClick={this.onNext}
+          >
+            Next
+          </Button>
+        )}
         {showModal && (
           <Modal
             url={pictureLargeUrl}
