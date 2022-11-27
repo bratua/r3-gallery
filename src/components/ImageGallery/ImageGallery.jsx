@@ -9,6 +9,7 @@ import { Button } from 'components/Button';
 export class ImageGallery extends PureComponent {
   state = {
     pictures: [],
+    picturesCount: 0,
     page: 1,
     progress: 'idle',
     showModal: false,
@@ -19,11 +20,9 @@ export class ImageGallery extends PureComponent {
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.page !== prevState.page) {
-      // await this.getPictures();
+      await this.getPictures();
       await this.scrollNextPage();
-
-      // const target = await this.state.pictures[12].id;
-      // const targetItem = document.getElementById(`${target}`);
+      // this.onLoad();
     }
     if (this.props.searchQuery !== prevProps.searchQuery) {
       this.setState({ pictures: [], page: 1 });
@@ -32,21 +31,13 @@ export class ImageGallery extends PureComponent {
   }
 
   scrollNextPage = async () => {
-    await this.getPictures();
-    console.log('state id', this.state.scrollToId);
-    // const target = await ;
-    // const target = this.state.scrollToId;
-    // const targetItem = document.getElementById(`${}`);
-    // console.log('target', target);
-    // console.log('targetItem', targetItem);
-    // targetItem.scrollIntoView();
-    // setTimeout(() => {
-    //   const target = this.state.scrollToId;
-    //   const targetItem = document.getElementById(`${target}`);
-    //   console.log('target', target);
-    //   console.log('targetItem', targetItem);
-    //   targetItem.scrollIntoView();
-    // }, 0);
+    setTimeout(() => {
+      const target = this.state.scrollToId;
+      const targetItem = document.getElementById(`${target}`);
+      console.log('target', target);
+      console.log('targetItem', targetItem);
+      targetItem.scrollIntoView();
+    }, 0);
   };
 
   onNext = () => {
@@ -62,20 +53,13 @@ export class ImageGallery extends PureComponent {
       this.state.page
     );
     console.log(pictures);
-    const prevId = this.state.scrollToId;
 
     this.setState(prevProps => ({
       pictures: [...prevProps.pictures, ...pictures],
       // progress: 'loaded',
       scrollToId: pictures[0].id,
+      picturesCount: pictures.length,
     }));
-    console.log(prevId);
-    console.log(pictures[0].id);
-    console.log(prevId !== pictures[0].id);
-
-    if (prevId !== pictures[0].id) {
-      this.setState({ progress: 'loaded' });
-    }
   };
 
   onPreview = (url, alt) => {
@@ -86,6 +70,23 @@ export class ImageGallery extends PureComponent {
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
+  onLoad = () => {
+    setTimeout(() => {
+      if (this.state.picturesCount === 0) {
+        this.setState({ progress: 'loaded' });
+      }
+    }, 20);
+  };
+
+  onLoadImgCheck = async loadStatus => {
+    if (loadStatus.type === 'load') {
+      this.setState(prevProps => ({
+        picturesCount: prevProps.picturesCount - 1,
+      }));
+      this.onLoad();
+    }
   };
 
   render() {
@@ -111,19 +112,6 @@ export class ImageGallery extends PureComponent {
 
     return (
       <Box>
-        {progress === 'loaded' && (
-          <Button
-            type="button"
-            className="Button"
-            disabled={
-              this.state.pictures.length < 12 ||
-              this.state.pictures.length % 12 !== 0
-            }
-            onClick={this.onNext}
-          >
-            Next
-          </Button>
-        )}
         {showModal && (
           <Modal
             url={pictureLargeUrl}
@@ -143,9 +131,11 @@ export class ImageGallery extends PureComponent {
               imgId={id}
               tags={tags}
               onPreview={this.onPreview}
+              onLoad={this.onLoadImgCheck}
             />
           ))}
         </ul>
+
         {progress === 'loaded' && (
           <Button
             type="button"

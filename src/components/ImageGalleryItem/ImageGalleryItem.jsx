@@ -4,6 +4,7 @@ export const ImageGalleryItem = ({
   largeImageURL,
   onPreview,
   imgId,
+  onLoad,
 }) => {
   return (
     <li
@@ -11,7 +12,12 @@ export const ImageGalleryItem = ({
       id={imgId}
       onClick={() => onPreview(largeImageURL, tags)}
     >
-      <img className="ImageGalleryItem-image" src={imgUrl} alt={tags} />
+      <img
+        className="ImageGalleryItem-image"
+        src={imgUrl}
+        alt={tags}
+        onLoad={onLoad}
+      />
     </li>
   );
 };
