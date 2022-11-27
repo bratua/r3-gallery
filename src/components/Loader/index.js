@@ -1,1 +1,1 @@
-export { Loader } from './Loader';
+export { InfinitLoader, OvalLoader } from './Loader';

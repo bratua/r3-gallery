@@ -3,7 +3,7 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { PureComponent } from 'react';
 import * as API from 'API_Pixabay/API_Pixabay';
 import { Modal } from 'components/Modal';
-import { Loader } from 'components/Loader';
+import { InfinitLoader, OvalLoader } from 'components/Loader';
 import { Button } from 'components/Button';
 
 export class ImageGallery extends PureComponent {
@@ -80,12 +80,14 @@ export class ImageGallery extends PureComponent {
     }, 20);
   };
 
-  onLoadImgCheck = async loadStatus => {
-    if (loadStatus.type === 'load') {
+  onLoadImgCheck = loadStatus => {
+    console.log(loadStatus);
+    if (loadStatus) {
       this.setState(prevProps => ({
         picturesCount: prevProps.picturesCount - 1,
       }));
       this.onLoad();
+      return;
     }
   };
 
@@ -120,7 +122,7 @@ export class ImageGallery extends PureComponent {
           ></Modal>
         )}
 
-        {progress === 'loading' && <Loader />}
+        {progress === 'loading' && <InfinitLoader />}
 
         <ul className="ImageGallery" id="imageGallery">
           {pictures.map(({ id, webformatURL, largeImageURL, tags }) => (
@@ -132,6 +134,7 @@ export class ImageGallery extends PureComponent {
               tags={tags}
               onPreview={this.onPreview}
               onLoad={this.onLoadImgCheck}
+              loader={OvalLoader}
             />
           ))}
         </ul>

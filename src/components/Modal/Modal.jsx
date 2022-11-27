@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 import { createPortal } from 'react-dom';
-import { InfinitySpin } from 'react-loader-spinner';
+// import { InfinitySpin } from 'react-loader-spinner';
 
 const modalRoot = document.querySelector('#modal-root');
 
