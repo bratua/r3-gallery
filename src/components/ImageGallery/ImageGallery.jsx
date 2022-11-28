@@ -5,7 +5,6 @@ import * as API from 'API_Pixabay/API_Pixabay';
 import Box from 'components/Box';
 import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { Modal } from 'components/Modal';
-import { InfinitLoader, OvalLoader } from 'components/Loader';
 import { Button } from 'components/Button';
 
 export class ImageGallery extends PureComponent {
