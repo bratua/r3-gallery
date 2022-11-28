@@ -1,10 +1,17 @@
 import { PureComponent } from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 // import { InfinitySpin } from 'react-loader-spinner';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends PureComponent {
+  static propTypes = {
+    close: PropTypes.func,
+    url: PropTypes.string,
+    alt: PropTypes.string,
+  };
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }

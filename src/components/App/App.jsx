@@ -12,12 +12,6 @@ export class App extends PureComponent {
     this.setState({ searchQuery: '' });
   }
 
-  // componentDidUpdate() {
-  //   if (this.state.searchQuery !== '') {
-  //     this.setState({ searchQuery: '' });
-  //   }
-  // }
-
   onSearch = query => {
     if (query === this.state.searchQuery) {
       return;

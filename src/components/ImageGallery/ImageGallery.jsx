@@ -1,13 +1,16 @@
-import Box from 'components/Box';
-import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import * as API from 'API_Pixabay/API_Pixabay';
+import Box from 'components/Box';
+import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { Modal } from 'components/Modal';
 import { InfinitLoader, OvalLoader } from 'components/Loader';
 import { Button } from 'components/Button';
 
 export class ImageGallery extends PureComponent {
+  static propTypes = { searchQuery: PropTypes.string };
+
   state = {
     pictures: [],
     picturesCount: 0,
@@ -64,8 +67,6 @@ export class ImageGallery extends PureComponent {
     setTimeout(() => {
       const target = this.state.scrollToId;
       const targetItem = document.getElementById(`${target}`);
-      console.log('target', target);
-      console.log('targetItem', targetItem);
       targetItem.scrollIntoView();
     }, 0);
   };
@@ -91,7 +92,7 @@ export class ImageGallery extends PureComponent {
       if (pictures.length === 0) {
         // console.log('No images!');
         throw new Error(
-          `${this.props.searchQuery} No images found! Картинок по зпросу не найдено!`
+          `${this.props.searchQuery} Картинок по зпросу не найдено!`
         );
       }
     } catch (error) {
@@ -173,7 +174,7 @@ export class ImageGallery extends PureComponent {
           ></Modal>
         )}
 
-        {progress === 'loading' && <InfinitLoader />}
+        {/* {progress === 'loading' && <InfinitLoader />} */}
 
         <ul className="ImageGallery" id="imageGallery">
           {pictures.map(({ id, webformatURL, largeImageURL, tags }) => (
@@ -185,7 +186,6 @@ export class ImageGallery extends PureComponent {
               tags={tags}
               onPreview={this.onPreview}
               onLoad={this.onLoadImgCheck}
-              loader={OvalLoader}
             />
           ))}
         </ul>

@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types';
 import { Field, Form, Formik } from 'formik';
-import { toast } from 'react-toastify';
-
 import { ReactComponent as SearchIcon } from '../icons/search.svg';
+import { toast } from 'react-toastify';
 
 export const SearchBar = ({ onSubmit }) => {
   const initialValues = { searchQuery: '' };
@@ -16,11 +16,6 @@ export const SearchBar = ({ onSubmit }) => {
       actions.setSubmitting(false);
       return;
     }
-    // setTimeout(() => {
-    //   onSubmit(searchQuery.trim());
-    //   actions.setSubmitting(false);
-    // }, 2000);
-
     onSubmit(searchQuery.trim());
     actions.setSubmitting(false);
   };
@@ -51,4 +46,8 @@ export const SearchBar = ({ onSubmit }) => {
       )}
     </Formik>
   );
+};
+
+SearchBar.propTypes = {
+  onSubmit: PropTypes.func,
 };

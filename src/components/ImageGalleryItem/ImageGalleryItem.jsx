@@ -1,33 +1,18 @@
-import { OvalLoader } from 'components/Loader';
 import { PureComponent } from 'react';
+import { PropTypes } from 'prop-types';
 import Box from 'components/Box';
 import { ImageLoader } from 'components/Loader';
 
-// export const ImageGalleryItem = ({
-//   imgUrl,
-//   tags,
-//   largeImageURL,
-//   onPreview,
-//   imgId,
-//   onLoad,
-// }) => {
-//   return (
-//     <li
-//       className="GalleryItem"
-//       id={imgId}
-//       onClick={() => onPreview(largeImageURL, tags)}
-//     >
-//       <img
-//         className="ImageGalleryItem-image"
-//         src={imgUrl}
-//         alt={tags}
-//         onLoad={onLoad}
-//       />
-//     </li>
-//   );
-// };
-
 export class ImageGalleryItem extends PureComponent {
+  static propType = {
+    imgUrl: PropTypes.string,
+    largeImageURL: PropTypes.string,
+    imgId: PropTypes.string,
+    tags: PropTypes.string,
+    onPreview: PropTypes.func,
+    onLoad: PropTypes.func,
+  };
+
   state = {
     loaded: false,
   };
