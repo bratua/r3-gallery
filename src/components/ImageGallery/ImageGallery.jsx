@@ -1,6 +1,7 @@
 import Box from 'components/Box';
 import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { PureComponent } from 'react';
+import { toast } from 'react-toastify';
 import * as API from 'API_Pixabay/API_Pixabay';
 import { Modal } from 'components/Modal';
 import { InfinitLoader, OvalLoader } from 'components/Loader';
@@ -16,19 +17,48 @@ export class ImageGallery extends PureComponent {
     pictureAlt: '',
     pictureLargeUrl: '',
     scrollToId: null,
+    errorMessage: null,
+    imagesLeft: null,
+    imagesInQuery: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
+    // console.log('upp start');
     if (this.state.page !== prevState.page) {
       await this.getPictures();
       await this.scrollNextPage();
+      await this.showStats();
+
       // this.onLoad();
     }
+    // console.log('upp end');
+
     if (this.props.searchQuery !== prevProps.searchQuery) {
       this.setState({ pictures: [], page: 1 });
       await this.getPictures();
+      this.showStats();
     }
   }
+
+  showStats = async () => {
+    setTimeout(() => {
+      let totalPages = Math.ceil(this.state.imagesInQuery / 12);
+      let pagesLeft = totalPages - this.state.page;
+
+      if (this.state.pictures.length > 0) {
+        toast.success(
+          `Найдено:
+          - изображений - ${this.state.imagesInQuery}
+          - страниц - ${totalPages}
+          - страниц осталось - ${pagesLeft}.
+          - вы на - ${this.state.page} странице`,
+          {
+            position: 'top-right',
+          }
+        );
+      }
+    }, 0);
+  };
 
   scrollNextPage = async () => {
     setTimeout(() => {
@@ -43,27 +73,48 @@ export class ImageGallery extends PureComponent {
   onNext = () => {
     this.setState(prev => ({
       page: prev.page + 1,
+      imagesLeft: prev.imagesInQuery - this.state.page * 12,
     }));
   };
 
   getPictures = async () => {
-    this.setState({ progress: 'loading' });
-    const pictures = await API.getQueryPicture(
-      this.props.searchQuery,
-      this.state.page
-    );
-    console.log(pictures);
+    let pictures = [];
+    let statsQuery = null;
+    try {
+      this.setState({ progress: 'loading' });
+      const apiResponse = await API.getQueryPicture(
+        this.props.searchQuery,
+        this.state.page
+      );
+      pictures = apiResponse.hits;
+      statsQuery = apiResponse.stats;
+      if (pictures.length === 0) {
+        // console.log('No images!');
+        throw new Error(
+          `${this.props.searchQuery} No images found! Картинок по зпросу не найдено!`
+        );
+      }
+    } catch (error) {
+      // console.log('catch ', error.message);
+      toast.error(error.message, {
+        position: 'top-right',
+      });
+      this.setState({
+        errorMessage: error.message,
+        progress: 'idle',
+      });
+      return;
+    }
 
     this.setState(prevProps => ({
       pictures: [...prevProps.pictures, ...pictures],
-      // progress: 'loaded',
       scrollToId: pictures[0].id,
       picturesCount: pictures.length,
+      imagesInQuery: statsQuery,
     }));
   };
 
   onPreview = (url, alt) => {
-    // console.log(url, alt);
     this.setState({ pictureAlt: alt, pictureLargeUrl: url });
     this.toggleModal();
   };
@@ -81,7 +132,7 @@ export class ImageGallery extends PureComponent {
   };
 
   onLoadImgCheck = loadStatus => {
-    console.log(loadStatus);
+    // console.log(loadStatus);
     if (loadStatus) {
       this.setState(prevProps => ({
         picturesCount: prevProps.picturesCount - 1,
@@ -143,7 +194,10 @@ export class ImageGallery extends PureComponent {
           <Button
             type="button"
             className="Button"
-            disabled={this.state.pictures.length < 12}
+            disabled={
+              this.state.pictures.length < 12 ||
+              this.state.pictures.length % 12 !== 0
+            }
             onClick={this.onNext}
           >
             Next
@@ -151,47 +205,5 @@ export class ImageGallery extends PureComponent {
         )}
       </Box>
     );
-
-    // if (progress === 'idle') {
-    //   return;
-    // }
-
-    // if (progress === 'loading') {
-    //   return <Loader />;
-    // }
-
-    // if (progress === 'loaded') {
-    //   return (
-    //     <Box>
-    //       {showModal && (
-    //         <Modal
-    //           url={pictureLargeUrl}
-    //           alt={pictureAlt}
-    //           close={this.toggleModal}
-    //         ></Modal>
-    //       )}
-
-    //       <ul className="ImageGallery">
-    //         {pictures.map(pic => (
-    //           <ImageGalleryItem
-    //             key={pic.id}
-    //             imgUrl={pic.webformatURL}
-    //             largeImageURL={pic.largeImageURL}
-    //             imgId={pic.id}
-    //             tags={pic.tags}
-    //             onPreview={this.onPreview}
-    //           />
-    //         ))}
-    //       </ul>
-    //       <button
-    //         type="button"
-    //         className="Button"
-    //         disabled={this.state.pictures.length < 12}
-    //         onClick={this.onNext}
-    //       >
-    //         <span className="button-label">Next</span>
-    //       </button>
-    //     </Box>
-    // );
   }
 }

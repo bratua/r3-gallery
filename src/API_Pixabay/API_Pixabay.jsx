@@ -10,6 +10,9 @@ axios.defaults.baseURL = API_OPTIONS.apiURL;
 export const getQueryPicture = async (query, page) => {
   const url = `?q=${query}&page=${page}&key=${API_OPTIONS.apiKey}&image_type=photo&orientation=horizontal&per_page=12`;
   const response = await axios.get(url);
-  // console.log('api', response);
-  return response.data.hits;
+
+  const hits = response.data.hits;
+  const stats = response.data.totalHits;
+  // console.log('api', hits, stats);
+  return { hits, stats };
 };

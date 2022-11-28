@@ -1,6 +1,7 @@
 import { OvalLoader } from 'components/Loader';
 import { PureComponent } from 'react';
 import Box from 'components/Box';
+import { ImageLoader } from 'components/Loader';
 
 // export const ImageGalleryItem = ({
 //   imgUrl,
@@ -48,14 +49,7 @@ export class ImageGalleryItem extends PureComponent {
         onClick={() => onPreview(largeImageURL, tags)}
       >
         <Box className="ImageWraper">
-          {!this.state.loaded && (
-            <>
-              <div className="ImageWall"></div>
-              <div className="ImageLoader">
-                <OvalLoader />
-              </div>
-            </>
-          )}
+          {!this.state.loaded && <ImageLoader />}
           <img
             className="ImageGalleryItem-image"
             src={imgUrl}
