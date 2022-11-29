@@ -6,7 +6,7 @@ import Box from 'components/Box';
 import { ImageGalleryItem } from 'components/ImageGalleryItem';
 import { Modal } from 'components/Modal';
 import { Button } from 'components/Button';
-
+import { ImageLoader } from 'components/Loader';
 export class ImageGallery extends PureComponent {
   static propTypes = { searchQuery: PropTypes.string };
 
@@ -170,7 +170,9 @@ export class ImageGallery extends PureComponent {
             url={pictureLargeUrl}
             alt={pictureAlt}
             close={this.toggleModal}
-          ></Modal>
+          >
+            <ImageLoader />
+          </Modal>
         )}
 
         {/* {progress === 'loading' && <InfinitLoader />} */}

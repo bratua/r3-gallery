@@ -146,13 +146,6 @@ img {
   position: relative;
 }
 
-.ImageLoader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .ImageWall {
   position: absolute;
   top: 0;
@@ -160,6 +153,13 @@ img {
   background-color: #fff;
   width: 100%;
   height: 100%;
+}
+
+.ImageLoader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .ImageGalleryItem-image {
@@ -192,6 +192,7 @@ img {
 }
 
 .Modal {
+  position: relative;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
 }

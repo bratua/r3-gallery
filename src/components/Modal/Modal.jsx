@@ -11,7 +11,9 @@ export class Modal extends PureComponent {
     url: PropTypes.string,
     alt: PropTypes.string,
   };
-
+  state = {
+    imgLoaded: false,
+  };
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -32,13 +34,21 @@ export class Modal extends PureComponent {
     }
   };
 
+  onLoad = e => {
+    if (e.type === 'load') {
+      this.setState(({ imgLoaded }) => ({
+        imgLoaded: !imgLoaded,
+      }));
+    }
+  };
+
   render() {
     const { url, alt, children } = this.props;
     return createPortal(
       <div className="Overlay" onClick={this.handleOverlayClick}>
         <div className="Modal">
-          {children}
-          <img src={url} alt={alt} />
+          {!this.state.imgLoaded && children}
+          <img src={url} alt={alt} onLoad={this.onLoad} />
         </div>
       </div>,
       modalRoot
