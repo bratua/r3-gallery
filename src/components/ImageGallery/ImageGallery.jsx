@@ -50,10 +50,10 @@ export class ImageGallery extends PureComponent {
       if (this.state.pictures.length > 0) {
         toast.success(
           `Найдено:
-          - изображений - ${this.state.imagesInQuery}
-          - страниц - ${totalPages}
-          - страниц осталось - ${pagesLeft}.
-          - вы на - ${this.state.page} странице`,
+          изображений: ${this.state.imagesInQuery};
+          страниц: ${totalPages};
+          страниц осталось: ${pagesLeft};
+          вы на: ${this.state.page} странице;`,
           {
             position: 'top-right',
           }
@@ -128,7 +128,7 @@ export class ImageGallery extends PureComponent {
       if (this.state.picturesCount === 0) {
         this.setState({ progress: 'loaded' });
       }
-    }, 20);
+    }, 0);
   };
 
   onLoadImgCheck = loadStatus => {
